@@ -223,4 +223,4 @@ def compare_players():
     return render_template("compare_players.html", selected_players=selected_players, plot_url=plot_url)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
