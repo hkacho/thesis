@@ -10,24 +10,24 @@ app = Flask(__name__)
 
 # Load all season-specific DataFrames and drop the first column
 dataframes = {
-    "2017/2018": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Data/stats_PL_2017_2018.csv"),
-    "2018/2019": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Data/stats_PL_2018_2019.csv"),
-    "2019/2020": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Data/stats_PL_2019_2020.csv"),
-    "2020/2021": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Data/stats_PL_2020_2021.csv"),
-    "2021/2022": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Data/stats_PL_2021_2022.csv"),
-    "2022/2023": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Data/stats_PL_2022_2023.csv"),
-    "2023/2024": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Data/stats_PL_2023_2024.csv"),
-    "2024/2025": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Data/stats_PL_2024_2025.csv"),
+    "2017/2018": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Data/stats_PL_2017_2018.csv"),
+    "2018/2019": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Data/stats_PL_2018_2019.csv"),
+    "2019/2020": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Data/stats_PL_2019_2020.csv"),
+    "2020/2021": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Data/stats_PL_2020_2021.csv"),
+    "2021/2022": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Data/stats_PL_2021_2022.csv"),
+    "2022/2023": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Data/stats_PL_2022_2023.csv"),
+    "2023/2024": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Data/stats_PL_2023_2024.csv"),
+    "2024/2025": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Data/stats_PL_2024_2025.csv"),
 }
 df_elo = {
-    "2017/2018": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Bricks/elo_PL_2017_2018.csv"),
-    "2018/2019": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Bricks/elo_PL_2018_2019.csv"),
-    "2019/2020": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Bricks/elo_PL_2019_2020.csv"),
-    "2020/2021": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Bricks/elo_PL_2020_2021.csv"),
-    "2021/2022": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Bricks/elo_PL_2021_2022.csv"),
-    "2022/2023": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Bricks/elo_PL_2022_2023.csv"),
-    "2023/2024": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Bricks/elo_PL_2023_2024.csv"),
-    "2024/2025": pd.read_csv("/Users/howannes/Documents/afthonia/code/Thesis/Bricks/elo_PL_2024_2025.csv"),
+    "2017/2018": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Bricks/elo_PL_2017_2018.csv"),
+    "2018/2019": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Bricks/elo_PL_2018_2019.csv"),
+    "2019/2020": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Bricks/elo_PL_2019_2020.csv"),
+    "2020/2021": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Bricks/elo_PL_2020_2021.csv"),
+    "2021/2022": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Bricks/elo_PL_2021_2022.csv"),
+    "2022/2023": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Bricks/elo_PL_2022_2023.csv"),
+    "2023/2024": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Bricks/elo_PL_2023_2024.csv"),
+    "2024/2025": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Bricks/elo_PL_2024_2025.csv"),
 }
 
 # Combine all DataFrames into one for player search and "All Time" option
