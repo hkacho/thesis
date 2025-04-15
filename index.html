@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Elo Rating</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212; /* Dark gray background */
+            color: #ffffff; /* White text */
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #ffffff; /* White text */
+            margin-top: 20px;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        label {
+            margin-right: 5px;
+            color: #ffffff; /* White text */
+        }
+
+        select, input[type="text"], button {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #333333; /* Dark gray border */
+            border-radius: 4px;
+            background-color: #1e1e1e; /* Slightly lighter gray */
+            color: #ffffff; /* White text */
+        }
+
+        button {
+            background-color: #333333; /* Dark gray button */
+            color: #ffffff; /* White text */
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #555555; /* Lighter gray on hover */
+        }
+
+        button[name="reset_search"] {
+            background-color: #b22222; /* Dark red for reset button */
+        }
+
+        button[name="reset_search"]:hover {
+            background-color: #ff4444; /* Lighter red on hover */
+        }
+
+        /* Table Styling */
+        table {
+            width: 99%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+            background-color: #1e1e1e; /* Slightly lighter gray */
+        }
+
+        th, td {
+            border: 1px solid #333333; /* Dark gray border */
+            padding: 10px;
+            text-align: left;
+            color: #ffffff; /* White text */
+        }
+
+        th {
+            background-color: #333333; /* Dark gray header */
+            color: #ffffff; /* White text */
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        th:hover {
+            background-color: #555555; /* Lighter gray on hover */
+        }
+
+        .index-column {
+            background-color: #1e1e1e; /* Slightly lighter gray */
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #2a2a2a; /* Slightly lighter gray for even rows */
+        }
+
+        tr:hover {
+            background-color: #444444; /* Medium gray on hover */
+        }
+
+        /* Footer Styling */
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #333333; /* Dark gray footer */
+            color: #ffffff; /* White text */
+            margin-top: 20px;
+        }
+
+        a.player-link {
+            color: #ffffff; /* Bright blue color for links */
+            text-decoration: none; /* Remove underline */
+            transition: color 0.3s ease; /* Smooth transition for hover effect */
+        }
+
+        a.player-link:hover {
+            color: #8ed0ff; /* Change to yellow on hover */
+            text-decoration: underline; /* Add underline on hover */
+        }
+    </style>
+    <script>
+        // Automatically submit the form when a dropdown is changed
+        function autoSubmit() {
+            document.getElementById("filterForm").submit();
+        }
+
+        let currentSortColumn = null;
+    let currentSortOrder = 'none'; // 'asc', 'desc', or 'none'
+    let originalOrder = []; // Store the original order of rows
+
+    // Save the original order of rows when the page loads
+    window.onload = function () {
+        const table = document.getElementById("statsTable");
+        const rows = Array.from(table.querySelectorAll("tbody tr"));
+        originalOrder = rows.map(row => row.cloneNode(true)); // Clone rows to preserve their original state
+    };
+
+    function sortTable(column) {
+        const table = document.getElementById("statsTable");
+        const rows = Array.from(table.querySelectorAll("tbody tr"));
+        const columnIndex = Array.from(table.querySelectorAll("thead th")).findIndex(th => th.textContent === column);
+
+        if (currentSortColumn === column) {
+            // Cycle through sort orders: none -> asc -> desc -> none
+            currentSortOrder = currentSortOrder === 'none' ? 'desc' : currentSortOrder === 'desc' ? 'asc' : 'none';
+        } else {
+            currentSortColumn = column;
+            currentSortOrder = 'desc';
+        }
+
+        if (currentSortOrder === 'none') {
+            // Reset to original order
+            const tbody = table.querySelector("tbody");
+            tbody.innerHTML = ""; // Clear the table body
+            originalOrder.forEach(row => tbody.appendChild(row.cloneNode(true))); // Restore original rows
+        } else {
+            rows.sort((a, b) => {
+                const aText = a.cells[columnIndex].textContent.trim();
+                const bText = b.cells[columnIndex].textContent.trim();
+
+                // Handle numeric and string sorting
+                const aValue = isNaN(aText) ? aText : parseFloat(aText);
+                const bValue = isNaN(bText) ? bText : parseFloat(bText);
+
+                if (currentSortOrder === 'asc') {
+                    return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+                } else {
+                    return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
+                }
+            });
+
+            // Reorder rows in the table
+            const tbody = table.querySelector("tbody");
+            rows.forEach((row, index) => {
+                tbody.appendChild(row);
+                // Update the index column
+                row.querySelector(".index-column").textContent = index + 1;
+            });
+        }
+    }
+    </script>
+</head>
+<body>
+    <h1>Player Elo Rating</h1>
+    <form id="filterForm" method="POST">
+        <label for="season">Filter by Season:</label>
+        <select name="season" id="season" onchange="autoSubmit()">
+            {% for season in seasons %}
+                <option value="{{ season }}" {% if season == selected_season %}selected{% endif %}>{{ season }}</option>
+            {% endfor %}
+        </select>
+        <label for="team">Filter by Team:</label>
+        <select name="team" id="team" onchange="autoSubmit()">
+            <option value="">All Teams</option>
+            {% for team in teams %}
+                <option value="{{ team }}" {% if team == selected_team %}selected{% endif %}>{{ team }}</option>
+            {% endfor %}
+        </select>
+        <label for="position">Filter by Position:</label>
+        <select name="position" id="position" onchange="autoSubmit()">
+            <option value="">All Positions</option>
+            {% for position in positions %}
+                <option value="{{ position }}" {% if position == selected_position %}selected{% endif %}>{{ position }}</option>
+            {% endfor %}
+        </select>
+        <label for="playing_time_filter">Filter by Playing Time:</label>
+        <select name="playing_time_filter" id="playing_time_filter" onchange="this.form.submit()">
+            <option value="all" {% if playing_time_filter == "all" %}selected{% endif %}>All players</option>
+            <option value="50_percent" {% if playing_time_filter == "50_percent" %}selected{% endif %}>At least 50% of all games played</option>
+            <option value="5_games" {% if playing_time_filter == "5_games" %}selected{% endif %}>At least 5 games played</option>
+        </select>
+    </form>
+
+    <form id="filterForm" method="POST">
+        <label for="player_search">Search Player:</label>
+        <input type="text" name="player_search" id="player_search" value="{{ player_search }}">
+        <button type="submit">Search</button>
+        <button type="submit" name="reset_search" value="true">Reset</button>
+    </form>
+
+    <form id="compareForm" method="POST" action="{{ url_for('compare_players') }}">
+        <label for="players">Compare Players (comma-separated):</label>
+        <input type="text" name="players" id="players" placeholder="Enter player names, e.g., Player1, Player2">
+        <button type="submit">Compare Players</button>
+    </form>
+
+    {% if search_results %}
+        <h2>Search Results for "{{ player_search }}"</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th class="index-column">#</th>
+                    {% for column in search_results[0].keys() %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in search_results %}
+                    <tr>
+                        <td class="index-column">{{ loop.index }}</td>
+                        {% for value in row.values() %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <table id="statsTable">
+        <thead>
+            <tr>
+                <th class="index-column">#</th>
+                {% for column in data[0].keys() %}
+                    <th onclick="sortTable('{{ column }}')">{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+                <tr>
+                    <td class="index-column">{{ loop.index }}</td>
+                    {% for key, value in row.items() %}
+                    {% if key == "Player" %}
+                        <td>
+                            <a href="{{ url_for('player_games', player_name=value, season=selected_season) }}" class="player-link">
+                                {{ value }}
+                            </a>
+                        </td>
+                    {% else %}
+                        <td>{{ value }}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
