@@ -136,7 +136,7 @@ def player_games(player_name):
 
     else:
         # Construct the file path for the selected season
-        season_file = f"/Users/howannes/Documents/afthonia/code/Thesis/Bricks/elo_PL_{selected_season.replace('/', '_')}.csv"
+        season_file = f"https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Bricks/elo_PL_{selected_season.replace('/', '_')}"
 
         # Try to load the dataset for the selected season
         try:
