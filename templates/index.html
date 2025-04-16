@@ -62,6 +62,14 @@
             background-color: #ff4444; /* Lighter red on hover */
         }
 
+        button[name="helpbutton"] {
+            background-color: #17b51a; /* Dark red for reset button */
+        }
+
+        button[name="helpbutton"]:hover {
+            background-color: #4ee651; /* Lighter red on hover */
+        }
+
         /* Table Styling */
         table {
             width: 99%;
@@ -182,6 +190,15 @@
             });
         }
     }
+    function showHelp() {
+        const modal = document.getElementById('helpModal');
+        modal.style.display = 'block';
+    }
+
+    function closeHelp() {
+        const modal = document.getElementById('helpModal');
+        modal.style.display = 'none';
+    }
     </script>
 </head>
 <body>
@@ -220,6 +237,7 @@
         <input type="text" name="player_search" id="player_search" value="{{ player_search }}">
         <button type="submit">Search</button>
         <button type="submit" name="reset_search" value="true">Reset</button>
+        <button type="button" name="helpbutton" onclick="showHelp()">Help</button>
     </form>
 
     <form id="compareForm" method="POST" action="{{ url_for('compare_players') }}">
