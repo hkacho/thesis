@@ -30,6 +30,23 @@ df_elo = {
     "2024/2025": pd.read_csv("https://raw.githubusercontent.com/hkacho/thesiss/refs/heads/main/Bricks/elo_PL_2024_2025.csv"),
 }
 
+column_descriptions = {
+    "Player": "The name of the player.",
+    "Pos": "The position the player plays (Forward, Midfielder, Defender, Goalkeeper).",
+    "Age": "The age of the player",
+    "Team": "The team of the player.",
+    "GP": "Games played by the player in the season.",
+    "MinOn": "Total minutes played by the player in the season.",
+    "Win_pct": "Percentage of games won while player was on the field.",
+    "AdjPPG": "Adjusted Points Per Game.",
+    "End Elo": "The player's Elo rating at the end of the season.",
+    "absDelta": "Absolute change in Elo rating.",
+    "relDelta": "Relative change in Elo rating.",
+    "EPG": "Elo per Game (absDelta / GP).",
+    "teamRank": "The rank of the player in his team.",
+    "Market Value": "The market value of the player (Transfermarkt).",
+}
+
 # Combine all DataFrames into one for player search and "All Time" option
 all_seasons_df = pd.concat(
     [df.assign(Season=season) for season, df in dataframes.items()],
@@ -99,6 +116,7 @@ def index():
     return render_template(
         "index.html",
         data=filtered_df.to_dict(orient="records"),
+        column_descriptions=column_descriptions,
         teams=teams,
         positions=positions,
         seasons=seasons,
